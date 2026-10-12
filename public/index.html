@@ -5,149 +5,934 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>⚡ PikaNotes Dashboard</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
 <style>
 :root {
-  --bg:#ffdf68;--panel:#fff4d4;--text:#252018;--muted:#766044;
-  --border:#292319;--input:#fff9e9;--sidebar:#192d50;
-  --active:#263e67;--shadow:#c69d39;--red:#f04444;
+  --bg:#f5f6fa;
+  --panel:#fff;
+  --text:#20283a;
+  --muted:#718096;
+  --border:#e4e8f0;
+  --input:#f4f6fa;
+  --sidebar:#171923;
 }
+
 body.dark {
-  --bg:#211e2b;--panel:#302b3a;--text:#fff2d6;--muted:#c5b8a1;
-  --border:#82758c;--input:#393342;--sidebar:#111b32;
-  --active:#30476c;--shadow:#15121c;
+  --bg:#171923;
+  --panel:#242735;
+  --text:#f5f7ff;
+  --muted:#b3bbcc;
+  --border:#3b4050;
+  --input:#303444;
+  --sidebar:#101116;
 }
-*{box-sizing:border-box;margin:0;padding:0}
-body{background:var(--bg);color:var(--text);font-family:Nunito,sans-serif;transition:.2s}
-button,input,textarea,select{font:inherit}
-button{cursor:pointer}
-button:focus-visible,input:focus-visible,textarea:focus-visible,select:focus-visible{outline:3px solid #ee5149;outline-offset:3px}
-.app{display:grid;grid-template-columns:250px minmax(0,1fr);min-height:100vh;max-width:1600px;margin:auto}
-.sidebar{display:flex;flex-direction:column;min-height:calc(100vh - 30px);margin:15px;padding:18px 14px;border:2px solid var(--border);border-radius:16px;background:var(--sidebar);color:#fff4d6}
-.brand{text-align:center;padding:5px 0 20px;border-bottom:1px solid #53617a}
-.brand img{display:block;width:100px;height:90px;object-fit:contain;margin:auto}
-.brand h2{color:#ffdc54;font-size:22px;font-weight:900;text-shadow:2px 2px #10172a}
-.brand p{color:#d9e2f2;font-size:10px;letter-spacing:2px;margin-top:5px}
-.nav{display:grid;gap:8px;margin-top:22px}
-.nav button{display:flex;align-items:center;gap:11px;width:100%;padding:12px;border:0;border-left:4px solid transparent;border-radius:8px;color:#fff3d6;background:transparent;text-align:left;font-size:14px;font-weight:900}
-.nav button i{width:20px;text-align:center}
-.nav button:hover,.nav button.active{background:var(--active)}
-.nav button.active{border-left-color:#ffcf43;color:#ffdc54}
-.nav-count{margin-left:auto}
-.sidebar-label{margin:25px 8px 12px;color:#c5d1e7;font-size:11px;letter-spacing:1px}
-.tags{display:flex;flex-wrap:wrap;gap:7px}
-.tag{border:1px solid #382a19;border-radius:5px;background:#ffdf55;color:#30251a;padding:5px 8px;font-size:10px;font-weight:900}
-.battery{margin-top:auto;padding-top:25px}
-.battery-title{margin-bottom:10px;font-size:12px;font-weight:900}
-.battery-box{height:27px;padding:3px;border:3px solid white;background:#131a28;border-radius:5px;transform:rotate(-2deg)}
-.battery-fill{width:0;height:100%;background:repeating-linear-gradient(90deg,#ffdb45 0 10px,#f5ad31 10px 13px)}
-.battery p{margin-top:12px;color:#ffdf55;font-size:11px;font-weight:800}
-.main{min-width:0;padding:24px 28px 32px;background-image:radial-gradient(#f0c94d 1px,transparent 1px);background-size:22px 22px}
-body.dark .main{background-image:radial-gradient(#474052 1px,transparent 1px)}
-.topbar{display:flex;align-items:center;gap:10px;margin-bottom:18px}
-.search{display:flex;align-items:center;gap:10px;flex:1;min-width:0;padding:0 13px;border:2px solid #c9b47f;border-radius:10px;background:var(--input);color:var(--text)}
-.search i{color:var(--muted)}
-.search input{width:100%;min-width:0;padding:12px 0;border:0;outline:none;background:transparent;color:var(--text)}
-.search input::placeholder{color:var(--muted)}
-.icon-btn{flex-shrink:0;width:43px;height:43px;border:2px solid var(--border);border-radius:9px;background:var(--panel);color:var(--text)}
-.new-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:11px 15px;border:2px solid #9e2828;border-radius:8px;background:var(--red);color:white;box-shadow:3px 4px 0 #b42f2f;font-weight:900;white-space:nowrap}
-.new-btn:hover{background:#ff5953}
-.heading{text-align:center;margin:10px 0 22px}
-.heading h1{color:#ed4945;font-size:clamp(24px,3vw,36px);font-weight:900;letter-spacing:1px;text-shadow:2px 2px #fff0b2,4px 4px #26334e}
-.heading h1 span{color:#ffba24}
-.heading p{margin-top:8px;color:var(--muted);font-size:13px;font-weight:700}
-.hero{display:flex;align-items:center;gap:18px;margin-bottom:22px;padding:16px 20px;border:2px solid #c6a03f;border-radius:14px;background:linear-gradient(110deg,#ffe98c,#fff4d4);color:#30251e;overflow:hidden}
-body.dark .hero{background:linear-gradient(110deg,#453c30,#342d3c);color:var(--text);border-color:var(--border)}
-.hero-copy{flex:1}
-.hero-copy h2{font-size:21px;font-weight:900}
-.hero-copy p{margin-top:6px;font-size:13px;line-height:1.7}
-.hero img{width:110px;height:110px;object-fit:contain;flex-shrink:0}
-.hero-badge{display:inline-block;margin-top:10px;padding:5px 10px;border-radius:20px;background:#ffdc52;color:#322515;font-size:11px;font-weight:900}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-bottom:24px}
-.stat{display:flex;align-items:center;gap:12px;padding:14px;border:2px solid var(--border);border-radius:10px;background:var(--panel);box-shadow:3px 4px 0 var(--shadow)}
-.stat-icon{display:grid;place-items:center;width:42px;height:42px;flex-shrink:0;border-radius:10px;background:#ffdc59;color:#332617;font-size:18px}
-.stat:nth-child(2) .stat-icon{background:#c3e8fa}
-.stat:nth-child(3) .stat-icon{background:#d5f2a8}
-.stat-label{color:var(--muted);font-size:11px;font-weight:900}
-.stat-value{margin-top:3px;font-size:24px;font-weight:900}
-.toolbar{display:flex;align-items:center;gap:10px;margin-bottom:20px}
-.filter-control{display:flex;align-items:center;gap:8px;padding:9px 11px;border:2px solid var(--border);border-radius:8px;background:var(--panel);font-size:12px;font-weight:900}
-.filter-control select{max-width:120px;border:0;background:transparent;color:var(--text)}
-.note-count{margin-left:auto;color:var(--muted);font-size:11px;font-weight:900}
-.form-panel{display:none;margin-bottom:24px;padding:20px;border:2px solid var(--border);border-radius:12px;background:var(--panel);box-shadow:4px 5px 0 var(--shadow)}
-.form-panel.show{display:block}
-.form-panel h2{margin-bottom:7px;font-size:21px}
-.form-panel p{margin-bottom:15px;color:var(--muted);font-size:13px}
-.field{width:100%;margin-bottom:12px;padding:12px;border:2px solid #c9b47f;border-radius:8px;background:var(--input);color:var(--text)}
-textarea.field{min-height:120px;resize:vertical}
-.form-actions{display:flex;gap:10px}
-.cancel-btn{padding:10px 15px;border:2px solid var(--border);border-radius:8px;background:transparent;color:var(--text);font-weight:900}
-.notes-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;align-items:stretch}
-.note-card{position:relative;display:flex;flex-direction:column;min-width:0;min-height:205px;padding:16px;border:2px solid #292319;border-radius:11px;background:var(--note-bg,#fff0a9);color:#30251e;box-shadow:4px 5px 0 #c9b477;transition:transform .15s;overflow:hidden}
-.note-card:nth-child(4n + 2){--note-bg:#ffdf54}
-.note-card:nth-child(4n + 3){--note-bg:#dafa9f}
-.note-card:nth-child(4n + 4){--note-bg:#ffb99e}
-.note-card:hover{transform:translateY(-3px)}
-.note-top{display:flex;align-items:center;gap:8px;margin-bottom:12px}
-.note-number{color:#75603e;font-size:12px;font-weight:900}
-.note-emoji{font-size:21px}
-.favorite{margin-left:auto;width:34px;height:34px;border:1px solid #8a744b;border-radius:8px;background:#fff8df;color:#4a3927}
-.favorite.active{color:#df9a00;background:#fff0a1}
-.favorite.active i{font-weight:900}
-.note-card h3{margin-bottom:10px;font-size:17px;font-weight:900;overflow-wrap:anywhere}
-.note-content{flex:1;margin-bottom:14px;color:#493a2a;font-size:14px;font-weight:600;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
-.note-meta{margin-bottom:12px;color:#786546;font-size:11px;font-weight:800}
-.note-actions{display:flex;flex-wrap:wrap;gap:8px}
-.action-btn{padding:7px 10px;border:1px solid #8b7651;border-radius:6px;background:#fff8e3;color:#403020;font-size:11px;font-weight:900}
-.action-btn.delete{color:#a3232a}
-.empty-state{grid-column:1/-1;padding:35px 15px;border:2px dashed var(--border);border-radius:12px;background:var(--panel);text-align:center}
-.empty-state img{width:90px;height:90px;object-fit:contain}
-.empty-state h3{margin:10px 0}
-.empty-state p{color:var(--muted);font-size:13px}
-.message{display:none;margin-bottom:18px;padding:12px;border:2px solid #49713c;border-radius:8px;background:#e0f6d2;color:#2e5125;font-weight:800;font-size:12px}
-.message.show{display:block}
-.message.error{border-color:#b52f37;background:#ffe0d9;color:#8e242a}
-.footer{margin-top:28px;color:var(--muted);text-align:center;font-size:11px;font-weight:800}
-@media(min-width:1200px){.notes-grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
-@media(max-width:850px){
- .app{grid-template-columns:200px minmax(0,1fr)}
- .main{padding:18px 14px}
- .stats{grid-template-columns:1fr}
- .notes-grid{grid-template-columns:1fr}
- .hero img{width:80px;height:80px}
+
+* {
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
 }
-@media(max-width:560px){
- .app{display:block}
- .sidebar{min-height:auto;margin:8px;padding:10px}
- .brand{padding:4px 0 10px}
- .brand img{width:55px;height:50px}
- .brand h2{font-size:18px}
- .brand p{font-size:9px}
- .nav{display:flex;overflow-x:auto;gap:4px;margin-top:10px}
- .nav button{width:auto;flex-shrink:0;padding:9px;font-size:11px}
- .sidebar-label,.tags,.battery{display:none}
- .main{padding:13px 10px 24px}
- .topbar{gap:6px}
- .search{gap:6px;padding:0 8px}
- .search input{font-size:11px}
- .icon-btn{width:37px;height:37px}
- .new-btn{padding:9px;font-size:11px}
- .heading h1{font-size:22px}
- .hero{gap:8px;padding:12px}
- .hero-copy h2{font-size:17px}
- .hero-copy p{font-size:11px}
- .hero img{width:68px;height:68px}
- .toolbar{gap:5px}
- .filter-control{padding:8px;font-size:10px}
- .filter-control select{max-width:80px;font-size:10px}
+
+body {
+  font-family:Nunito,sans-serif;
+  background:var(--bg);
+  color:var(--text);
+  transition:background .2s,color .2s;
+}
+
+button,input,textarea,select {
+  font:inherit;
+}
+
+button {
+  cursor:pointer;
+}
+
+button:focus-visible,
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline:3px solid #e94b48;
+  outline-offset:3px;
+}
+
+.app {
+  display:grid;
+  grid-template-columns:245px minmax(0,1fr);
+  min-height:100vh;
+  max-width:1900px;
+  margin:auto;
+}
+
+.sidebar {
+  position:sticky;
+  top:0;
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  padding:18px 14px;
+  background:var(--sidebar);
+  color:white;
+  overflow-y:auto;
+}
+
+.brand {
+  text-align:center;
+  padding:5px 0 20px;
+  border-bottom:1px solid #414657;
+}
+
+.brand img {
+  display:block;
+  width:90px;
+  height:85px;
+  object-fit:contain;
+  margin:auto;
+}
+
+.brand h2 {
+  font-size:20px;
+  color:#ffdc54;
+  font-weight:900;
+}
+
+.brand p {
+  font-size:10px;
+  letter-spacing:2px;
+  color:#cbd5e1;
+  margin-top:5px;
+}
+
+.nav {
+  display:grid;
+  gap:7px;
+  margin-top:22px;
+}
+
+.nav button {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  width:100%;
+  padding:12px;
+  border:0;
+  border-radius:9px;
+  background:transparent;
+  color:#f8f1d8;
+  text-align:left;
+  font-size:13px;
+  font-weight:900;
+}
+
+.nav button i {
+  width:20px;
+  text-align:center;
+}
+
+.nav button:hover,
+.nav button.active {
+  background:#ffca05;
+  color:#171717;
+}
+
+.nav-count {
+  margin-left:auto;
+}
+
+.sidebar-label {
+  margin:25px 8px 12px;
+  font-size:11px;
+  letter-spacing:1px;
+  color:#bdc7d8;
+}
+
+.tags {
+  display:flex;
+  flex-wrap:wrap;
+  gap:6px;
+}
+
+.tag {
+  padding:5px 8px;
+  border-radius:5px;
+  background:#ffdf55;
+  color:#30251a;
+  font-size:10px;
+  font-weight:900;
+}
+
+.battery {
+  margin-top:auto;
+  padding-top:25px;
+}
+
+.battery-title {
+  font-size:12px;
+  font-weight:900;
+  margin-bottom:10px;
+}
+
+.battery-box {
+  height:25px;
+  border:3px solid white;
+  padding:3px;
+  border-radius:5px;
+  background:#131a28;
+}
+
+.battery-fill {
+  height:100%;
+  width:0;
+  background:repeating-linear-gradient(
+    90deg,#ffdb45 0 10px,#f5ad31 10px 13px
+  );
+  transition:width .3s;
+}
+
+.battery p {
+  margin-top:10px;
+  color:#ffdf55;
+  font-size:11px;
+  font-weight:800;
+}
+
+.workspace {
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 255px;
+  min-width:0;
+}
+
+.main {
+  min-width:0;
+  padding:18px;
+}
+
+.topbar {
+  display:flex;
+  align-items:center;
+  gap:9px;
+  padding:9px;
+  margin-bottom:16px;
+  border:1px solid var(--border);
+  border-radius:14px;
+  background:var(--panel);
+}
+
+.search {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  flex:1;
+  min-width:0;
+  padding:0 12px;
+  border-radius:24px;
+  background:var(--input);
+}
+
+.search i {
+  color:var(--muted);
+}
+
+.search input {
+  width:100%;
+  min-width:0;
+  padding:11px 0;
+  border:0;
+  outline:none;
+  background:transparent;
+  color:var(--text);
+}
+
+.icon-btn {
+  width:42px;
+  height:42px;
+  flex-shrink:0;
+  border:0;
+  border-radius:50%;
+  background:var(--input);
+  color:var(--text);
+}
+
+.new-btn {
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:7px;
+  padding:11px 15px;
+  border:0;
+  border-radius:9px;
+  background:#ffca05;
+  color:#171717;
+  font-weight:900;
+  white-space:nowrap;
+}
+
+.new-btn:hover {
+  background:#f2bb00;
+}
+
+button:disabled {
+  opacity:.6;
+  cursor:wait;
+}
+
+.heading {
+  text-align:center;
+  margin:12px 0 20px;
+}
+
+.heading h1 {
+  color:#ed4945;
+  font-size:clamp(24px,3vw,35px);
+  font-weight:900;
+}
+
+.heading p {
+  color:var(--muted);
+  font-size:13px;
+  margin-top:7px;
+}
+
+.hero {
+  display:flex;
+  align-items:center;
+  gap:15px;
+  min-height:145px;
+  padding:17px 20px;
+  margin-bottom:15px;
+  border-radius:14px;
+  background:linear-gradient(110deg,#ffe58b,#fff4cf);
+  color:#30251e;
+}
+
+body.dark .hero {
+  background:linear-gradient(110deg,#423b2d,#302b3a);
+  color:var(--text);
+}
+
+.hero-copy {
+  flex:1;
+}
+
+.hero-copy h2 {
+  font-size:clamp(20px,2vw,29px);
+  font-weight:900;
+}
+
+.hero-copy p {
+  margin-top:7px;
+  font-size:13px;
+  line-height:1.7;
+}
+
+.hero img {
+  width:115px;
+  height:115px;
+  object-fit:contain;
+  flex-shrink:0;
+}
+
+.hero-badge {
+  display:inline-block;
+  margin-top:10px;
+  padding:5px 10px;
+  border-radius:20px;
+  background:#ffdc52;
+  color:#322515;
+  font-size:11px;
+  font-weight:900;
+}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:10px;
+  margin-bottom:15px;
+}
+
+.stat {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:14px;
+  border-radius:12px;
+  background:#e5f2ff;
+}
+
+.stat:nth-child(2) {
+  background:#ffe6ef;
+}
+
+.stat:nth-child(3) {
+  background:#e4f8eb;
+}
+
+.stat-icon {
+  display:grid;
+  place-items:center;
+  width:43px;
+  height:43px;
+  flex-shrink:0;
+  border-radius:12px;
+  background:#acd5ff;
+  font-size:17px;
+}
+
+.stat:nth-child(2) .stat-icon {
+  background:#ffb8d0;
+}
+
+.stat:nth-child(3) .stat-icon {
+  background:#a8efd0;
+}
+
+.stat-label {
+  font-size:10px;
+  font-weight:900;
+  color:#5b6475;
+}
+
+.stat-value {
+  margin-top:3px;
+  font-size:25px;
+  font-weight:900;
+  color:#20283a;
+}
+
+.toolbar {
+  display:flex;
+  align-items:center;
+  flex-wrap:wrap;
+  gap:10px;
+  padding:10px 12px;
+  margin-bottom:12px;
+  border-radius:12px;
+  background:var(--panel);
+}
+
+.filter-control {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  padding:7px 9px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  font-size:12px;
+  font-weight:900;
+}
+
+.filter-control select {
+  max-width:120px;
+  border:0;
+  background:transparent;
+  color:var(--text);
+}
+
+.note-count {
+  margin-left:auto;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:900;
+}
+
+.form-panel {
+  display:none;
+  padding:20px;
+  margin-bottom:20px;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--panel);
+}
+
+.form-panel.show {
+  display:block;
+}
+
+.form-panel h2 {
+  font-size:21px;
+  margin-bottom:6px;
+}
+
+.form-panel p {
+  font-size:13px;
+  color:var(--muted);
+  margin-bottom:15px;
+}
+
+.field {
+  display:block;
+  width:100%;
+  margin-bottom:12px;
+  padding:12px;
+  border:1px solid #c9b47f;
+  border-radius:8px;
+  background:var(--input);
+  color:var(--text);
+}
+
+textarea.field {
+  min-height:120px;
+  resize:vertical;
+}
+
+.form-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+}
+
+.cancel-btn {
+  padding:10px 15px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  background:transparent;
+  color:var(--text);
+  font-weight:900;
+}
+
+.notes-grid {
+  display:grid;
+  grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;
+  align-items:stretch;
+}
+
+.note-card {
+  display:flex;
+  flex-direction:column;
+  min-width:0;
+  min-height:190px;
+  padding:16px;
+  border-radius:13px;
+  background:var(--note-bg,#fff4cc);
+  color:#30251e;
+  overflow-wrap:anywhere;
+}
+
+.note-card:nth-child(4n + 2) {
+  --note-bg:#ffe3ef;
+}
+
+.note-card:nth-child(4n + 3) {
+  --note-bg:#e2f3ff;
+}
+
+.note-card:nth-child(4n + 4) {
+  --note-bg:#e7f9e5;
+}
+
+.note-top {
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:12px;
+}
+
+.note-number {
+  font-size:12px;
+  font-weight:900;
+  color:#75603e;
+}
+
+.note-emoji {
+  font-size:20px;
+}
+
+.favorite {
+  margin-left:auto;
+  width:34px;
+  height:34px;
+  border:0;
+  border-radius:50%;
+  background:#fff8df;
+  color:#4a3927;
+}
+
+.favorite.active {
+  color:#df9a00;
+  background:#fff0a1;
+}
+
+.note-card h3 {
+  font-size:17px;
+  font-weight:900;
+  margin-bottom:9px;
+}
+
+.note-content {
+  flex:1;
+  margin-bottom:14px;
+  font-size:14px;
+  font-weight:600;
+  line-height:1.8;
+  white-space:pre-wrap;
+  color:#493a2a;
+}
+
+.note-meta {
+  margin-bottom:10px;
+  color:#786546;
+  font-size:11px;
+  font-weight:800;
+}
+
+.note-actions {
+  display:flex;
+  flex-wrap:wrap;
+  gap:7px;
+}
+
+.action-btn {
+  padding:7px 10px;
+  border:0;
+  border-radius:7px;
+  background:#fff8e3;
+  color:#403020;
+  font-size:11px;
+  font-weight:900;
+}
+
+.action-btn.delete {
+  color:#a3232a;
+}
+
+.empty-state {
+  grid-column:1/-1;
+  padding:30px 15px;
+  border:2px dashed var(--border);
+  border-radius:12px;
+  background:var(--panel);
+  text-align:center;
+}
+
+.empty-state img {
+  width:80px;
+  height:80px;
+  object-fit:contain;
+}
+
+.empty-state h3 {
+  margin:10px 0;
+}
+
+.empty-state p {
+  color:var(--muted);
+  font-size:13px;
+  overflow-wrap:anywhere;
+}
+
+.message {
+  display:none;
+  margin-bottom:15px;
+  padding:12px;
+  border-radius:8px;
+  background:#e0f6d2;
+  color:#2e5125;
+  font-size:12px;
+  font-weight:800;
+}
+
+.message.show {
+  display:block;
+}
+
+.message.error {
+  background:#ffe0d9;
+  color:#8e242a;
+}
+
+.right-panel {
+  display:grid;
+  align-content:start;
+  gap:12px;
+  padding:18px 12px 24px 0;
+  min-width:0;
+}
+
+.rail-card {
+  padding:14px;
+  border:1px solid var(--border);
+  border-radius:13px;
+  background:var(--panel);
+}
+
+.rail-card h2 {
+  font-size:16px;
+  font-weight:900;
+  margin-bottom:12px;
+}
+
+.rail-heading {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+}
+
+.rail-heading span,
+.rail-hint {
+  font-size:10px;
+  color:var(--muted);
+}
+
+.calendar-month {
+  font-size:12px;
+  font-weight:800;
+  text-align:center;
+  margin-bottom:10px;
+}
+
+.calendar-grid {
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:4px;
+  text-align:center;
+  font-size:10px;
+}
+
+.calendar-grid span {
+  padding:5px 0;
+  border-radius:50%;
+}
+
+.calendar-grid .day-name {
+  font-weight:900;
+  color:var(--muted);
+}
+
+.calendar-grid .today {
+  background:#ffca05;
+  color:#171717;
+  font-weight:900;
+}
+
+.category-shortcuts {
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:5px;
+}
+
+.category-shortcuts button,
+.quick-actions button {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+  min-width:0;
+  padding:9px 2px;
+  border:0;
+  border-radius:9px;
+  background:#e7f2ff;
+  font-size:19px;
+}
+
+.category-shortcuts button:nth-child(2),
+.quick-actions button:nth-child(2) {
+  background:#ffe5ef;
+}
+
+.category-shortcuts button:nth-child(3) {
+  background:#fff1c9;
+}
+
+.category-shortcuts button:nth-child(4) {
+  background:#eee7ff;
+}
+
+.category-shortcuts button:hover,
+.quick-actions button:hover {
+  outline:2px solid #ffca05;
+}
+
+.category-shortcuts small,
+.quick-actions small {
+  font-size:10px;
+  color:#253047;
+}
+
+.rail-hint {
+  line-height:1.5;
+  margin-top:9px;
+}
+
+.quick-actions {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:6px;
+}
+
+.quick-actions button {
+  background:#fff1c9;
+}
+
+.quick-actions button:nth-child(3) {
+  background:#ffe5e5;
+}
+
+.rail-stat-row {
+  display:flex;
+  justify-content:space-between;
+  padding:7px 0;
+  border-bottom:1px solid var(--border);
+  font-size:12px;
+}
+
+body.dark .stat {
+  filter:brightness(.83);
+}
+
+.footer {
+  margin-top:25px;
+  text-align:center;
+  color:var(--muted);
+  font-size:11px;
+  font-weight:800;
+}
+
+@media(min-width:1400px) {
+  .notes-grid {
+    grid-template-columns:repeat(3,minmax(0,1fr));
+  }
+}
+
+@media(max-width:1150px) {
+  .workspace {
+    grid-template-columns:minmax(0,1fr);
+  }
+
+  .right-panel {
+    grid-template-columns:repeat(2,minmax(0,1fr));
+    padding:0 18px 20px;
+  }
+
+  .main {
+    padding:14px;
+  }
+}
+
+@media(max-width:850px) {
+  .app {
+    grid-template-columns:190px minmax(0,1fr);
+  }
+
+  .stats {
+    grid-template-columns:1fr;
+  }
+
+  .notes-grid {
+    grid-template-columns:1fr;
+  }
+
+  .right-panel {
+    grid-template-columns:1fr;
+  }
+}
+
+@media(max-width:560px) {
+  .app {
+    display:block;
+  }
+
+  .sidebar {
+    position:static;
+    height:auto;
+    padding:10px;
+  }
+
+  .brand {
+    padding:4px 0 10px;
+  }
+
+  .brand img {
+    width:55px;
+    height:50px;
+  }
+
+  .brand h2 {
+    font-size:18px;
+  }
+
+  .brand p {
+    font-size:9px;
+  }
+
+  .nav {
+    display:flex;
+    overflow-x:auto;
+    gap:4px;
+    margin-top:10px;
+  }
+
+  .nav button {
+    width:auto;
+    flex-shrink:0;
+    padding:9px;
+    font-size:11px;
+  }
+
+  .sidebar-label,
+  .tags,
+  .battery {
+    display:none;
+  }
+
+  .main {
+    padding:10px;
+  }
+
+  .topbar {
+    flex-wrap:wrap;
+  }
+
+  .search {
+    flex-basis:100%;
+    order:3;
+  }
+
+  .hero {
+    padding:12px;
+    gap:8px;
+  }
+
+  .hero img {
+    width:70px;
+    height:70px;
+  }
+
+  .hero-copy h2 {
+    font-size:17px;
+  }
+
+  .hero-copy p {
+    font-size:11px;
+  }
+
+  .stats {
+    grid-template-columns:1fr;
+  }
+
+  .notes-grid {
+    grid-template-columns:1fr;
+  }
+
+  .right-panel {
+    padding:0 10px 20px;
+  }
+
+  .filter-control select {
+    max-width:95px;
+  }
 }
 </style>
 </head>
 
 <body>
 <div class="app">
+
 <aside class="sidebar">
   <div class="brand">
     <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu mascot">
@@ -156,8 +941,11 @@ textarea.field{min-height:120px;resize:vertical}
   </div>
 
   <nav class="nav" aria-label="Notes navigation">
-    <button class="active" type="button" data-view="all"><i class="fa-solid fa-bolt"></i> All Notes <span class="nav-count" id="sideCount">0</span></button>
-    <button type="button" data-view="recent"><i class="fa-solid fa-folder"></i> Recent</button>
+    <button class="active" type="button" data-view="all">
+      <i class="fa-solid fa-bolt"></i> All Notes
+      <span class="nav-count" id="sideCount">0</span>
+    </button>
+    <button type="button" data-view="recent"><i class="fa-solid fa-clock"></i> Recent</button>
     <button type="button" data-view="tagged"><i class="fa-solid fa-palette"></i> Creative</button>
     <button type="button" data-view="favorites"><i class="fa-solid fa-star"></i> Favorites</button>
     <button type="button" data-view="trash"><i class="fa-solid fa-trash"></i> Trash</button>
@@ -165,7 +953,9 @@ textarea.field{min-height:120px;resize:vertical}
 
   <h3 class="sidebar-label">YOUR TAGS</h3>
   <div class="tags">
-    <span class="tag">#electric</span><span class="tag">#quests</span><span class="tag">#ideas</span>
+    <span class="tag">#electric</span>
+    <span class="tag">#quests</span>
+    <span class="tag">#ideas</span>
   </div>
 
   <div class="battery">
@@ -175,18 +965,24 @@ textarea.field{min-height:120px;resize:vertical}
   </div>
 </aside>
 
+<div class="workspace">
 <main class="main">
+
   <header class="topbar">
     <label class="search">
       <i class="fa-solid fa-magnifying-glass"></i>
       <input id="searchInput" type="search" placeholder="Search your sparks..." aria-label="Search notes">
     </label>
-    <button class="icon-btn" id="themeButton" type="button" aria-label="Switch theme" title="Switch theme"><i class="fa-solid fa-moon"></i></button>
-    <button class="new-btn" id="newButton" type="button"><i class="fa-solid fa-plus"></i> New</button>
+    <button class="icon-btn" id="themeButton" type="button" aria-label="Switch theme" title="Switch theme">
+      <i class="fa-solid fa-moon"></i>
+    </button>
+    <button class="new-btn" id="newButton" type="button">
+      <i class="fa-solid fa-plus"></i> New
+    </button>
   </header>
 
   <section class="heading">
-    <h1><span>⚡</span> PIKA NOTES <span>⚡</span></h1>
+    <h1>⚡ PIKA NOTES ⚡</h1>
     <p>Capture your ideas and stay organized.</p>
   </section>
 
@@ -200,28 +996,64 @@ textarea.field{min-height:120px;resize:vertical}
   </section>
 
   <section class="stats" aria-label="Note statistics">
-    <div class="stat"><div class="stat-icon"><i class="fa-solid fa-note-sticky"></i></div><div><div class="stat-label">TOTAL NOTES</div><div class="stat-value" id="totalStat">0</div></div></div>
-    <div class="stat"><div class="stat-icon"><i class="fa-solid fa-star"></i></div><div><div class="stat-label">FAVORITES</div><div class="stat-value" id="favoriteStat">0</div></div></div>
-    <div class="stat"><div class="stat-icon"><i class="fa-solid fa-clock"></i></div><div><div class="stat-label">RECENT NOTES</div><div class="stat-value" id="recentStat">0</div></div></div>
+    <div class="stat">
+      <div class="stat-icon"><i class="fa-solid fa-note-sticky"></i></div>
+      <div><div class="stat-label">TOTAL NOTES</div><div class="stat-value" id="totalStat">0</div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><i class="fa-solid fa-star"></i></div>
+      <div><div class="stat-label">FAVORITES</div><div class="stat-value" id="favoriteStat">0</div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-icon"><i class="fa-solid fa-clock"></i></div>
+      <div><div class="stat-label">RECENT NOTES</div><div class="stat-value" id="recentStat">0</div></div>
+    </div>
   </section>
 
   <div class="toolbar">
-    <label class="filter-control"><i class="fa-solid fa-filter"></i> Filter
+    <label class="filter-control">
+      <i class="fa-solid fa-filter"></i> Sort
       <select id="sortSelect" aria-label="Sort notes">
-        <option value="newest">Newest</option><option value="oldest">Oldest</option><option value="az">A–Z</option>
+        <option value="newest">Newest</option>
+        <option value="oldest">Oldest</option>
+        <option value="az">A–Z</option>
       </select>
     </label>
+
+    <label class="filter-control">
+      Category
+      <select id="categoryFilter" aria-label="Filter by category">
+        <option value="">All categories</option>
+        <option value="Study">Study</option>
+        <option value="Projects">Projects</option>
+        <option value="Personal">Personal</option>
+        <option value="Other">Other</option>
+      </select>
+    </label>
+
     <span class="note-count" id="noteCount">0 NOTES</span>
   </div>
 
   <section class="form-panel" id="formPanel">
     <h2 id="formTitle">⚡ Create a New Note</h2>
     <p id="formDescription">Catch your next brilliant idea!</p>
+
     <form id="noteForm">
       <input class="field" id="noteTitle" type="text" placeholder="Give your note a title..." maxlength="150" required>
+
+      <select class="field" id="noteCategory" required aria-label="Note category">
+        <option value="Study">📘 Study</option>
+        <option value="Projects">💻 Projects</option>
+        <option value="Personal">💗 Personal</option>
+        <option value="Other">🟣 Other</option>
+      </select>
+
       <textarea class="field" id="noteContent" placeholder="Write your note here..." maxlength="10000" required></textarea>
+
       <div class="form-actions">
-        <button class="new-btn" id="saveButton" type="submit"><i class="fa-solid fa-floppy-disk"></i> Save Note</button>
+        <button class="new-btn" id="saveButton" type="submit">
+          <i class="fa-solid fa-floppy-disk"></i> Save Note
+        </button>
         <button class="cancel-btn" id="cancelButton" type="button">Cancel</button>
       </div>
     </form>
@@ -229,18 +1061,62 @@ textarea.field{min-height:120px;resize:vertical}
 
   <div class="message" id="message" role="status" aria-live="polite"></div>
   <section class="notes-grid" id="notesGrid" aria-label="Your notes"></section>
+
   <footer class="footer">⚡ MADE WITH SPARKS · KEEP COLLECTING IDEAS ⚡</footer>
 </main>
+
+<aside class="right-panel" aria-label="Dashboard overview">
+
+  <section class="rail-card">
+    <h2>🗓️ Calendar</h2>
+    <div class="calendar-month" id="calendarMonth"></div>
+    <div class="calendar-grid" id="calendarGrid"></div>
+  </section>
+
+  <section class="rail-card">
+    <div class="rail-heading"><h2>📁 Categories</h2><span>Quick view</span></div>
+
+    <div class="category-shortcuts">
+      <button type="button" data-category="Study">📘<small>Study</small></button>
+      <button type="button" data-category="Projects">💻<small>Projects</small></button>
+      <button type="button" data-category="Personal">💗<small>Personal</small></button>
+      <button type="button" data-category="Other">🟣<small>Other</small></button>
+    </div>
+
+    <p class="rail-hint">Select a category to view its notes.</p>
+  </section>
+
+  <section class="rail-card">
+    <h2>⚡ Quick Actions</h2>
+    <div class="quick-actions">
+      <button type="button" id="railNewButton">➕<small>New Note</small></button>
+      <button type="button" id="railFavoritesButton">⭐<small>Favorites</small></button>
+      <button type="button" id="railTrashButton">🗑️<small>Trash</small></button>
+    </div>
+  </section>
+
+  <section class="rail-card">
+    <h2>📊 Note Statistics</h2>
+    <div class="rail-stat-row"><span>Total notes</span><strong id="railTotal">0</strong></div>
+    <div class="rail-stat-row"><span>Favorites</span><strong id="railFavorites">0</strong></div>
+    <div class="rail-stat-row"><span>In trash</span><strong id="railTrash">0</strong></div>
+  </section>
+
+</aside>
 </div>
 
 <script>
+"use strict";
+
 const API = "/notes";
 const $ = id => document.getElementById(id);
+const VALID_CATEGORIES = ["Study", "Projects", "Personal", "Other"];
 
 let notes = [];
 let editingId = null;
 let activeView = "all";
-let messageTimer;
+let activeCategory = "";
+let messageTimer = null;
 
 function readStorage(key) {
   try {
@@ -255,14 +1131,22 @@ let favoriteIds = new Set(readStorage("pikaFavorites"));
 let deletedIds = new Set(readStorage("pikaTrash"));
 
 function savePreferences() {
-  localStorage.setItem("pikaFavorites", JSON.stringify([...favoriteIds]));
-  localStorage.setItem("pikaTrash", JSON.stringify([...deletedIds]));
+  try {
+    localStorage.setItem("pikaFavorites", JSON.stringify([...favoriteIds]));
+    localStorage.setItem("pikaTrash", JSON.stringify([...deletedIds]));
+  } catch (error) {
+    console.warn("Could not save browser preferences:", error);
+  }
 }
 
 function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, c => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
-  })[c]);
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;",
+    "<":"&lt;",
+    ">":"&gt;",
+    '"':"&quot;",
+    "'":"&#039;"
+  })[char]);
 }
 
 function getId(note) {
@@ -273,44 +1157,74 @@ function getContent(note) {
   return note.content ?? note.text ?? "";
 }
 
+function getCategory(note) {
+  return VALID_CATEGORIES.includes(note.category) ? note.category : "Other";
+}
+
 function getDate(note) {
-  const value = note.createdAt || note.created_at || note.updatedAt || note.date;
+  const value = note.updatedAt || note.createdAt || note.created_at || note.date;
+
   if (value) {
     const date = new Date(value);
     if (!Number.isNaN(date.getTime())) return date;
   }
+
   const id = String(getId(note) ?? "");
+
   if (/^\d{13}/.test(id)) {
-    const date = new Date(Number(id.slice(0,13)));
+    const date = new Date(Number(id.slice(0, 13)));
     if (!Number.isNaN(date.getTime())) return date;
   }
+
   return new Date(0);
 }
 
 function formatDate(note) {
   const date = getDate(note);
+
   if (date.getTime() === 0) return "Saved note";
-  return date.toLocaleDateString(undefined,{month:"short",day:"numeric",year:"numeric"});
+
+  return date.toLocaleDateString(undefined, {
+    month:"short",
+    day:"numeric",
+    year:"numeric"
+  });
 }
 
 async function apiRequest(url, options = {}) {
-  const response = await fetch(url,{
+  const response = await fetch(url, {
     ...options,
-    headers:{
+    headers: {
       ...(options.body ? {"Content-Type":"application/json"} : {}),
       ...(options.headers || {})
     }
   });
+
   const text = await response.text();
   let data = null;
+
   if (text) {
-    try { data = JSON.parse(text); }
-    catch {
-      throw new Error("Server returned a non-JSON response (HTTP "+response.status+"). Check server.js.");
+    try {
+      data = JSON.parse(text);
+    } catch {
+      throw new Error(
+        "Server returned a non-JSON response (HTTP " +
+        response.status + "). Check server.js and the API route."
+      );
     }
   }
-  if (!response.ok) throw new Error(data?.message || data?.error || "Request failed (HTTP "+response.status+")");
-  if (data?.success === false) throw new Error(data.message || data.error || "Request failed.");
+
+  if (!response.ok) {
+    throw new Error(
+      data?.message || data?.error ||
+      "Request failed (HTTP " + response.status + ")"
+    );
+  }
+
+  if (data?.success === false) {
+    throw new Error(data.message || data.error || "Request failed.");
+  }
+
   return data;
 }
 
@@ -324,35 +1238,46 @@ function extractNotes(data) {
 
 function showMessage(text, isError = false) {
   clearTimeout(messageTimer);
+
   const box = $("message");
   box.textContent = text;
   box.className = "message show" + (isError ? " error" : "");
-  messageTimer = setTimeout(() => box.className = "message",4500);
+
+  messageTimer = setTimeout(() => {
+    box.className = "message";
+  }, 4500);
 }
 
 function openForm(note = null) {
   $("formPanel").classList.add("show");
+
   if (note) {
     editingId = getId(note);
     $("noteTitle").value = note.title || "";
     $("noteContent").value = getContent(note);
+    $("noteCategory").value = getCategory(note);
+
     $("formTitle").textContent = "✏️ Edit Note";
     $("formDescription").textContent = "Update your note below.";
-    $("saveButton").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Update Note';
+    $("saveButton").innerHTML =
+      '<i class="fa-solid fa-floppy-disk"></i> Update Note';
   } else {
     resetForm();
     $("formPanel").classList.add("show");
   }
-  $("formPanel").scrollIntoView({behavior:"smooth",block:"start"});
+
+  $("formPanel").scrollIntoView({behavior:"smooth", block:"start"});
   $("noteTitle").focus();
 }
 
 function resetForm() {
   editingId = null;
   $("noteForm").reset();
+  $("noteCategory").value = "Study";
   $("formTitle").textContent = "⚡ Create a New Note";
   $("formDescription").textContent = "Catch your next brilliant idea!";
-  $("saveButton").innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Save Note';
+  $("saveButton").innerHTML =
+    '<i class="fa-solid fa-floppy-disk"></i> Save Note';
 }
 
 function closeForm() {
@@ -362,57 +1287,108 @@ function closeForm() {
 
 function updateStats() {
   const now = Date.now();
-  const weekAgo = now - 7*24*60*60*1000;
-  const activeNotes = notes.filter(n => !deletedIds.has(String(getId(n))));
+  const weekAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+  const activeNotes = notes.filter(
+    note => !deletedIds.has(String(getId(note)))
+  );
+
   $("totalStat").textContent = activeNotes.length;
   $("sideCount").textContent = activeNotes.length;
-  $("favoriteStat").textContent = activeNotes.filter(n => favoriteIds.has(String(getId(n)))).length;
-  $("recentStat").textContent = activeNotes.filter(n => {
-    const time = getDate(n).getTime();
+
+  $("favoriteStat").textContent = activeNotes.filter(
+    note => favoriteIds.has(String(getId(note)))
+  ).length;
+
+  $("recentStat").textContent = activeNotes.filter(note => {
+    const time = getDate(note).getTime();
     return time >= weekAgo && time <= now;
   }).length;
-  const charge = Math.min(100,activeNotes.length*10);
-  $("chargeText").textContent = charge+"%";
-  $("chargeFill").style.width = charge+"%";
+
+  const charge = Math.min(100, activeNotes.length * 10);
+  $("chargeText").textContent = charge + "%";
+  $("chargeFill").style.width = charge + "%";
+
+  $("railTotal").textContent = activeNotes.length;
+
+  $("railFavorites").textContent = activeNotes.filter(
+    note => favoriteIds.has(String(getId(note)))
+  ).length;
+
+  $("railTrash").textContent = deletedIds.size;
 }
 
 function getVisibleNotes() {
   const query = $("searchInput").value.trim().toLowerCase();
-  let result = notes.filter(note => activeView === "trash"
-    ? deletedIds.has(String(getId(note)))
-    : !deletedIds.has(String(getId(note))));
+  const category = activeCategory || $("categoryFilter").value;
 
-  if (query) result = result.filter(note =>
-    String(note.title || "").toLowerCase().includes(query) ||
-    String(getContent(note)).toLowerCase().includes(query));
+  let result = notes.filter(note => {
+    const inTrash = deletedIds.has(String(getId(note)));
+    return activeView === "trash" ? inTrash : !inTrash;
+  });
+
+  if (category) {
+    result = result.filter(note => getCategory(note) === category);
+  }
+
+  if (query) {
+    result = result.filter(note =>
+      String(note.title || "").toLowerCase().includes(query) ||
+      String(getContent(note)).toLowerCase().includes(query) ||
+      getCategory(note).toLowerCase().includes(query)
+    );
+  }
 
   if (activeView === "recent") {
-    const cutoff = Date.now()-7*24*60*60*1000;
+    const cutoff = Date.now() - 7 * 24 * 60 * 60 * 1000;
     result = result.filter(note => getDate(note).getTime() >= cutoff);
   }
+
   if (activeView === "favorites") {
-    result = result.filter(note => favoriteIds.has(String(getId(note))));
+    result = result.filter(
+      note => favoriteIds.has(String(getId(note)))
+    );
   }
+
   if (activeView === "tagged") {
-    result = result.filter(note => /#\w+/.test(String(note.title||"")+" "+getContent(note)));
+    result = result.filter(note =>
+      /#\w+/.test(String(note.title || "") + " " + getContent(note))
+    );
   }
 
   const sort = $("sortSelect").value;
-  if (sort === "newest") result.sort((a,b) => getDate(b)-getDate(a));
-  if (sort === "oldest") result.sort((a,b) => getDate(a)-getDate(b));
-  if (sort === "az") result.sort((a,b) => String(a.title||"").localeCompare(String(b.title||"")));
+
+  if (sort === "newest") {
+    result.sort((a, b) => getDate(b) - getDate(a));
+  }
+
+  if (sort === "oldest") {
+    result.sort((a, b) => getDate(a) - getDate(b));
+  }
+
+  if (sort === "az") {
+    result.sort((a, b) =>
+      String(a.title || "").localeCompare(String(b.title || ""))
+    );
+  }
+
   return result;
 }
 
 function renderNotes() {
   updateStats();
+
   const visible = getVisibleNotes();
-  $("noteCount").textContent = visible.length+(visible.length===1?" NOTE":" NOTES");
+
+  $("noteCount").textContent =
+    visible.length + (visible.length === 1 ? " NOTE" : " NOTES");
+
   const grid = $("notesGrid");
 
   if (!visible.length) {
     let title = "Your notebook is empty!";
     let description = "Click New to capture your first idea.";
+
     if (activeView === "favorites") {
       title = "No favorites yet!";
       description = "Tap the star on a note to save it as a favorite.";
@@ -421,108 +1397,184 @@ function renderNotes() {
       description = "Notes from the last seven days appear here.";
     } else if (activeView === "tagged") {
       title = "No creative tags found!";
-      description = "Add a hashtag like #ideas to your note.";
+      description = "Add a hashtag such as #ideas to your note.";
     } else if (activeView === "trash") {
       title = "Trash is empty!";
       description = "Deleted notes will appear here.";
+    } else if (activeCategory || $("categoryFilter").value) {
+      title = "No notes in this category!";
+      description = "Create a note and choose this category.";
     } else if ($("searchInput").value.trim()) {
       title = "No matching notes!";
       description = "Try another search.";
     }
 
-    grid.innerHTML = `<div class="empty-state">
-      <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu">
-      <h3>${escapeHTML(title)}</h3><p>${escapeHTML(description)}</p>
-    </div>`;
+    grid.innerHTML = `
+      <div class="empty-state">
+        <img src="https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/25.png" alt="Pikachu">
+        <h3>${escapeHTML(title)}</h3>
+        <p>${escapeHTML(description)}</p>
+      </div>`;
+
     return;
   }
 
   const emojis = ["☑️","🎨","🛒","💡","🚀","⭐","📚","⚡"];
-  grid.innerHTML = visible.map((note,index) => {
+  const isTrash = activeView === "trash";
+
+  grid.innerHTML = visible.map((note, index) => {
     const id = String(getId(note));
     const favorite = favoriteIds.has(id);
-    const isTrash = activeView === "trash";
-    return `<article class="note-card">
-      <div class="note-top">
-        <span class="note-number">${index+1}.</span>
-        <span class="note-emoji">${emojis[index%emojis.length]}</span>
-        ${!isTrash ? `<button class="favorite ${favorite?"active":""}" type="button"
-          data-action="favorite" data-id="${escapeHTML(id)}"
-          aria-label="${favorite?"Remove from":"Add to"} favorites"
-          aria-pressed="${favorite}" title="${favorite?"Remove favorite":"Add favorite"}">
-          <i class="fa-${favorite?"solid":"regular"} fa-star"></i>
-        </button>` : ""}
-      </div>
-      <h3>${escapeHTML(note.title||"Untitled Note")}</h3>
-      <div class="note-content">${escapeHTML(getContent(note))}</div>
-      <div class="note-meta"><i class="fa-regular fa-clock"></i> ${escapeHTML(formatDate(note))}</div>
-      <div class="note-actions">
-        ${isTrash ? `
-          <button class="action-btn" type="button" data-action="restore" data-id="${escapeHTML(id)}"><i class="fa-solid fa-rotate-left"></i> Restore</button>
-          <button class="action-btn delete" type="button" data-action="permanentDelete" data-id="${escapeHTML(id)}"><i class="fa-solid fa-trash"></i> Delete forever</button>
-        ` : `
-          <button class="action-btn" type="button" data-action="edit" data-id="${escapeHTML(id)}"><i class="fa-solid fa-pen"></i> Edit</button>
-          <button class="action-btn delete" type="button" data-action="delete" data-id="${escapeHTML(id)}"><i class="fa-solid fa-trash"></i> Move to Trash</button>
-        `}
-      </div>
-    </article>`;
+
+    return `
+      <article class="note-card">
+        <div class="note-top">
+          <span class="note-number">${index + 1}.</span>
+          <span class="note-emoji">${emojis[index % emojis.length]}</span>
+
+          ${!isTrash ? `
+            <button class="favorite ${favorite ? "active" : ""}"
+              type="button"
+              data-action="favorite"
+              data-id="${escapeHTML(id)}"
+              aria-label="${favorite ? "Remove from" : "Add to"} favorites"
+              aria-pressed="${favorite}"
+              title="${favorite ? "Remove favorite" : "Add favorite"}">
+              <i class="fa-${favorite ? "solid" : "regular"} fa-star"></i>
+            </button>
+          ` : ""}
+        </div>
+
+        <h3>${escapeHTML(note.title || "Untitled Note")}</h3>
+        <div class="note-meta">📂 ${escapeHTML(getCategory(note))}</div>
+        <div class="note-content">${escapeHTML(getContent(note))}</div>
+
+        <div class="note-meta">
+          <i class="fa-regular fa-clock"></i> ${escapeHTML(formatDate(note))}
+        </div>
+
+        <div class="note-actions">
+          ${isTrash ? `
+            <button class="action-btn" type="button"
+              data-action="restore" data-id="${escapeHTML(id)}">
+              <i class="fa-solid fa-rotate-left"></i> Restore
+            </button>
+
+            <button class="action-btn delete" type="button"
+              data-action="permanentDelete" data-id="${escapeHTML(id)}">
+              <i class="fa-solid fa-trash"></i> Delete forever
+            </button>
+          ` : `
+            <button class="action-btn" type="button"
+              data-action="edit" data-id="${escapeHTML(id)}">
+              <i class="fa-solid fa-pen"></i> Edit
+            </button>
+
+            <button class="action-btn delete" type="button"
+              data-action="delete" data-id="${escapeHTML(id)}">
+              <i class="fa-solid fa-trash"></i> Move to Trash
+            </button>
+          `}
+        </div>
+      </article>`;
   }).join("");
 }
 
 async function loadNotes() {
+  $("notesGrid").innerHTML = `
+    <div class="empty-state">
+      <h3>⚡ Loading your notes...</h3>
+      <p>Please wait.</p>
+    </div>`;
+
   try {
     const data = await apiRequest(API);
     notes = extractNotes(data);
 
-    // Remove saved favorite/trash IDs that no longer exist on the server.
-    const validIds = new Set(notes.map(note => String(getId(note))));
-    favoriteIds = new Set([...favoriteIds].filter(id => validIds.has(id)));
-    deletedIds = new Set([...deletedIds].filter(id => validIds.has(id)));
+    const validIds = new Set(
+      notes.map(note => String(getId(note)))
+    );
+
+    favoriteIds = new Set(
+      [...favoriteIds].filter(id => validIds.has(id))
+    );
+
+    deletedIds = new Set(
+      [...deletedIds].filter(id => validIds.has(id))
+    );
+
     savePreferences();
     renderNotes();
   } catch (error) {
-    $("notesGrid").innerHTML = `<div class="empty-state">
-      <h3>⚠️ Couldn't load notes</h3><p>${escapeHTML(error.message)}</p>
-      <button class="new-btn" id="retryButton" type="button" style="margin-top:15px">Try Again</button>
-    </div>`;
-    $("retryButton").addEventListener("click",loadNotes);
+    $("notesGrid").innerHTML = `
+      <div class="empty-state">
+        <h3>⚠️ Couldn't load notes</h3>
+        <p>${escapeHTML(error.message)}</p>
+        <button class="new-btn" id="retryButton" type="button" style="margin-top:15px">
+          Try Again
+        </button>
+      </div>`;
+
+    $("retryButton").addEventListener("click", loadNotes);
   }
 }
 
-$("noteForm").addEventListener("submit",async event => {
+$("noteForm").addEventListener("submit", async event => {
   event.preventDefault();
+
   const title = $("noteTitle").value.trim();
   const content = $("noteContent").value.trim();
+  const category = $("noteCategory").value;
+
   if (!title || !content) {
-    showMessage("Please enter both title and content.",true);
+    showMessage("Please enter both title and content.", true);
+    return;
+  }
+
+  if (!VALID_CATEGORIES.includes(category)) {
+    showMessage("Please choose a valid category.", true);
     return;
   }
 
   const updating = editingId !== null;
-  const url = updating ? API+"/"+encodeURIComponent(editingId) : API;
+  const url = updating
+    ? API + "/" + encodeURIComponent(editingId)
+    : API;
+
   $("saveButton").disabled = true;
 
   try {
-    await apiRequest(url,{
-      method:updating?"PUT":"POST",
-      body:JSON.stringify({title,content})
+    await apiRequest(url, {
+      method: updating ? "PUT" : "POST",
+      body: JSON.stringify({title, content, category})
     });
+
     closeForm();
     await loadNotes();
-    showMessage(updating?"⚡ Note updated successfully!":"⚡ New note saved!");
+
+    showMessage(
+      updating ? "⚡ Note updated successfully!" : "⚡ New note saved!"
+    );
   } catch (error) {
-    showMessage(error.message,true);
+    showMessage(error.message, true);
   } finally {
     $("saveButton").disabled = false;
   }
 });
 
-$("newButton").addEventListener("click",() => openForm());
-$("cancelButton").addEventListener("click",closeForm);
-$("searchInput").addEventListener("input",renderNotes);
-$("sortSelect").addEventListener("change",renderNotes);
+$("newButton").addEventListener("click", () => openForm());
+$("railNewButton").addEventListener("click", () => openForm());
+$("cancelButton").addEventListener("click", closeForm);
 
-$("notesGrid").addEventListener("click",async event => {
+$("searchInput").addEventListener("input", renderNotes);
+$("sortSelect").addEventListener("change", renderNotes);
+
+$("categoryFilter").addEventListener("change", () => {
+  activeCategory = "";
+  setView("all", {clearSearch:false});
+});
+
+$("notesGrid").addEventListener("click", async event => {
   const button = event.target.closest("button[data-action]");
   if (!button) return;
 
@@ -540,6 +1592,7 @@ $("notesGrid").addEventListener("click",async event => {
       favoriteIds.add(id);
       showMessage("⭐ Added to favorites!");
     }
+
     savePreferences();
     renderNotes();
     return;
@@ -551,7 +1604,10 @@ $("notesGrid").addEventListener("click",async event => {
   }
 
   if (action === "delete") {
-    if (!confirm('Move "'+(note.title||"Untitled Note")+'" to Trash?')) return;
+    if (!confirm('Move "' + (note.title || "Untitled Note") + '" to Trash?')) {
+      return;
+    }
+
     deletedIds.add(id);
     savePreferences();
     renderNotes();
@@ -568,47 +1624,134 @@ $("notesGrid").addEventListener("click",async event => {
   }
 
   if (action === "permanentDelete") {
-    if (!confirm("Permanently delete this note from the server? This cannot be undone.")) return;
+    if (!confirm("Permanently delete this note from the server? This cannot be undone.")) {
+      return;
+    }
+
     try {
-      await apiRequest(API+"/"+encodeURIComponent(id),{method:"DELETE"});
+      await apiRequest(API + "/" + encodeURIComponent(id), {
+        method:"DELETE"
+      });
+
       favoriteIds.delete(id);
       deletedIds.delete(id);
       savePreferences();
+
       await loadNotes();
       showMessage("Note permanently deleted.");
     } catch (error) {
-      showMessage(error.message,true);
+      showMessage(error.message, true);
     }
   }
 });
 
+function setView(view, options = {}) {
+  activeView = view;
+  activeCategory = options.category || "";
+
+  if (options.clearSearch !== false) {
+    $("searchInput").value = "";
+  }
+
+  if (options.clearCategory !== false) {
+    $("categoryFilter").value = activeCategory;
+  }
+
+  document.querySelectorAll(".nav button").forEach(button => {
+    button.classList.toggle("active", button.dataset.view === view);
+  });
+
+  renderNotes();
+}
+
 document.querySelectorAll(".nav button").forEach(button => {
-  button.addEventListener("click",() => {
-    activeView = button.dataset.view;
-    document.querySelectorAll(".nav button").forEach(item =>
-      item.classList.toggle("active",item === button));
-    renderNotes();
+  button.addEventListener("click", () => setView(button.dataset.view));
+});
+
+document.querySelectorAll("[data-category]").forEach(button => {
+  button.addEventListener("click", () => {
+    setView("all", {category:button.dataset.category});
+    showMessage("Showing " + button.dataset.category + " notes.");
   });
 });
 
-// Save theme preference and use an icon-only theme button.
+$("railFavoritesButton").addEventListener("click", () => setView("favorites"));
+$("railTrashButton").addEventListener("click", () => setView("trash"));
+
 function applyTheme(dark) {
-  document.body.classList.toggle("dark",dark);
+  document.body.classList.toggle("dark", dark);
+
   $("themeButton").innerHTML = dark
     ? '<i class="fa-solid fa-sun"></i>'
     : '<i class="fa-solid fa-moon"></i>';
-  $("themeButton").setAttribute("aria-label",dark?"Switch to light theme":"Switch to dark theme");
-  $("themeButton").title = dark?"Switch to light theme":"Switch to dark theme";
+
+  $("themeButton").setAttribute(
+    "aria-label",
+    dark ? "Switch to light theme" : "Switch to dark theme"
+  );
+
+  $("themeButton").title = dark
+    ? "Switch to light theme"
+    : "Switch to dark theme";
 }
 
-applyTheme(localStorage.getItem("pikaTheme") === "dark");
+function readTheme() {
+  try {
+    return localStorage.getItem("pikaTheme") === "dark";
+  } catch {
+    return false;
+  }
+}
 
-$("themeButton").addEventListener("click",() => {
+applyTheme(readTheme());
+
+$("themeButton").addEventListener("click", () => {
   const dark = !document.body.classList.contains("dark");
-  localStorage.setItem("pikaTheme",dark?"dark":"light");
   applyTheme(dark);
+
+  try {
+    localStorage.setItem("pikaTheme", dark ? "dark" : "light");
+  } catch (error) {
+    console.warn("Could not save theme preference:", error);
+  }
 });
 
+function renderCalendar() {
+  const monthEl = $("calendarMonth");
+  const grid = $("calendarGrid");
+  const now = new Date();
+
+  monthEl.textContent = now.toLocaleDateString(undefined, {
+    month:"long",
+    year:"numeric"
+  });
+
+  const labels = ["S","M","T","W","T","F","S"];
+  const firstDay = new Date(
+    now.getFullYear(), now.getMonth(), 1
+  ).getDay();
+
+  const days = new Date(
+    now.getFullYear(), now.getMonth() + 1, 0
+  ).getDate();
+
+  grid.innerHTML = labels.map(label =>
+    `<span class="day-name">${label}</span>`
+  ).join("");
+
+  for (let i = 0; i < firstDay; i++) {
+    grid.insertAdjacentHTML("beforeend", "<span></span>");
+  }
+
+  for (let day = 1; day <= days; day++) {
+    grid.insertAdjacentHTML(
+      "beforeend",
+      `<span class="${day === now.getDate() ? "today" : ""}">${day}</span>`
+    );
+  }
+}
+
+renderCalendar();
 loadNotes();
 </script>
 </body>

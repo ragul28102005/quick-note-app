@@ -4,5 +4,41 @@
     "title": "My RJ Note",
     "content": "I am learning full-stack development using Node.js and Express.",
     "createdAt": "2026-10-11T02:40:36.130Z"
+  },
+  {
+    "id": "1791764062368-0ggrc5",
+    "title": "kskskkjj",
+    "content": "bka",
+    "createdAt": "2026-10-12T00:14:22.368Z"
+  },
+  {
+    "id": "1791764861944-j05dw9",
+    "title": "Stydy",
+    "content": "Java is better",
+    "createdAt": "2026-10-12T00:27:41.944Z",
+    "updatedAt": "2026-10-12T00:58:20.594Z",
+    "category": "Personal"
+  },
+  {
+    "id": "1791765196178-3zgt10",
+    "title": "Stydy",
+    "content": "kajdkflaldkg",
+    "createdAt": "2026-10-12T00:33:16.178Z",
+    "category": "Study",
+    "updatedAt": "2026-10-12T00:58:52.875Z"
+  },
+  {
+    "id": "1791765386498-fc13ie",
+    "title": "Study - Java Basics",
+    "content": "Study\n\nVariables and data types\n\nIf-else statements\n\nLoops\n\nArrays\n\nOOP concepts",
+    "createdAt": "2026-10-12T00:36:26.498Z"
+  },
+  {
+    "id": "1791766238178-9yzwee",
+    "title": "Java Exam Preparation",
+    "content": ". Learn Java variables and data types. 2. Practice if-else and switch statements. 3. Study for loops and while loops. 4. Practice arrays and strings. 5. Solve 5 coding problems every day. 6. Revise important programs before the exam.",
+    "createdAt": "2026-10-12T00:50:38.178Z",
+    "category": "Projects",
+    "updatedAt": "2026-10-12T00:58:10.016Z"
   }
 ]
